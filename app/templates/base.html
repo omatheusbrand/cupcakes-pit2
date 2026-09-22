@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titulo %}Doce Mimo Cupcakes{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+    <header class="cabecalho">
+        <a href="{{ url_for('vitrine.index') }}" class="logo">🧁 Doce Mimo Cupcakes</a>
+        <nav>
+            {% if session.get('usuario_id') %}
+                {% if session.get('usuario_papel') == 'admin' %}
+                    <a href="{{ url_for('vitrine.admin_cupcakes') }}">Painel admin</a>
+                {% endif %}
+                <span>Olá, {{ session.get('usuario_nome') }}</span>
+                <a href="{{ url_for('auth.logout') }}">Sair</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}">Entrar</a>
+                <a href="{{ url_for('auth.cadastro') }}">Cadastrar</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="conteudo">
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% if mensagens %}
+                {% for categoria, texto in mensagens %}
+                    <div class="alerta alerta-{{ categoria }}">{{ texto }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block conteudo %}{% endblock %}
+    </main>
+</body>
+</html>

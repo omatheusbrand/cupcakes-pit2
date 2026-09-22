@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Vitrine — Doce Mimo Cupcakes{% endblock %}
+
+{% block conteudo %}
+<form method="get" class="barra-busca">
+    <input type="text" name="busca" placeholder="Buscar cupcake..." value="{{ termo }}">
+    <button type="submit">Buscar</button>
+</form>
+
+<div class="chips">
+    <a href="{{ url_for('vitrine.index') }}" class="{{ 'ativo' if not categoria_id else '' }}">Todos</a>
+    {% for c in categorias %}
+        <a href="{{ url_for('vitrine.index', categoria=c.id) }}" class="{{ 'ativo' if categoria_id == c.id else '' }}">{{ c.nome }}</a>
+    {% endfor %}
+</div>
+
+<div class="grade">
+    {% for cupcake in cupcakes %}
+        <a href="{{ url_for('vitrine.detalhes', cupcake_id=cupcake.id) }}" class="cartao {{ 'esgotado' if not cupcake.disponivel else '' }}">
+            <div class="imagem-espaco">imagem</div>
+            <b>{{ cupcake.nome }}</b>
+            <span>R$ {{ "%.2f"|format(cupcake.preco) }}</span>
+            {% if not cupcake.disponivel %}
+                <small>Esgotado</small>
+            {% endif %}
+        </a>
+    {% else %}
+        <p>Nenhum cupcake encontrado.</p>
+    {% endfor %}
+</div>
+{% endblock %}

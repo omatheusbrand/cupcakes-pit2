@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block titulo %}{{ cupcake.nome }} — Doce Mimo Cupcakes{% endblock %}
+
+{% block conteudo %}
+<a href="{{ url_for('vitrine.index') }}">&larr; Voltar à vitrine</a>
+
+<div class="imagem-espaco grande">imagem</div>
+<h1>{{ cupcake.nome }}</h1>
+<p>{{ cupcake.descricao }}</p>
+
+<div class="linha"><span>Ingredientes</span><span>{{ cupcake.ingredientes }}</span></div>
+{% if cupcake.alergenicos %}
+<div class="linha"><span>Alergênicos</span><span>{{ cupcake.alergenicos }}</span></div>
+{% endif %}
+<div class="linha"><span>Preço</span><span>R$ {{ "%.2f"|format(cupcake.preco) }}</span></div>
+
+{% if cupcake.disponivel %}
+    <button class="botao-primario" disabled>Adicionar ao carrinho (em breve)</button>
+{% else %}
+    <p><b>Produto esgotado no momento.</b></p>
+{% endif %}
+{% endblock %}

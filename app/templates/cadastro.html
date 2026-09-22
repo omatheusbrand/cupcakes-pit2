@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block titulo %}Criar conta — Doce Mimo Cupcakes{% endblock %}
+
+{% block conteudo %}
+<form method="post" class="formulario">
+    <h1>Criar conta</h1>
+    <label>Nome
+        <input type="text" name="nome" value="{{ nome or '' }}" required>
+    </label>
+    <label>E-mail
+        <input type="email" name="email" value="{{ email or '' }}" required>
+    </label>
+    <label>Telefone
+        <input type="tel" name="telefone" value="{{ telefone or '' }}" required>
+    </label>
+    <label>Senha (mínimo 8 caracteres)
+        <input type="password" name="senha" minlength="8" required>
+    </label>
+    <button type="submit" class="botao-primario">Cadastrar</button>
+    <p>Já tem conta? <a href="{{ url_for('auth.login') }}">Entrar</a></p>
+</form>
+{% endblock %}

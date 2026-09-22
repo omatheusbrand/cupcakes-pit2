@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block titulo %}Admin: cupcakes — Doce Mimo Cupcakes{% endblock %}
+
+{% block conteudo %}
+<h1>Cupcakes cadastrados</h1>
+<p><i>O formulário de cadastro e edição vem no próximo bloco.</i></p>
+
+<table class="tabela">
+    <thead>
+        <tr><th>Nome</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+        {% for c in cupcakes %}
+        <tr>
+            <td>{{ c.nome }}</td>
+            <td>{{ c.categoria.nome }}</td>
+            <td>R$ {{ "%.2f"|format(c.preco) }}</td>
+            <td>{{ c.estoque }}</td>
+            <td>{{ "Ativo" if c.ativo else "Desativado" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

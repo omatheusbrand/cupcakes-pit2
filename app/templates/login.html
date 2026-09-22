@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}Entrar — Doce Mimo Cupcakes{% endblock %}
+
+{% block conteudo %}
+<form method="post" class="formulario">
+    <h1>Entrar</h1>
+    <label>E-mail
+        <input type="email" name="email" value="{{ email or '' }}" required>
+    </label>
+    <label>Senha
+        <input type="password" name="senha" required>
+    </label>
+    <button type="submit" class="botao-primario">Entrar</button>
+    <p>Não tem conta? <a href="{{ url_for('auth.cadastro') }}">Criar conta</a></p>
+</form>
+{% endblock %}
