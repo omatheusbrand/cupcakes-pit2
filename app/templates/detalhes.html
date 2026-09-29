@@ -15,7 +15,12 @@
 <div class="linha"><span>Preço</span><span>R$ {{ "%.2f"|format(cupcake.preco) }}</span></div>
 
 {% if cupcake.disponivel %}
-    <button class="botao-primario" disabled>Adicionar ao carrinho (em breve)</button>
+    <form method="post" action="{{ url_for('carrinho.adicionar', cupcake_id=cupcake.id) }}" class="formulario">
+        <label>Quantidade
+            <input type="number" name="quantidade" value="1" min="1" max="20">
+        </label>
+        <button type="submit" class="botao-primario">Adicionar ao carrinho</button>
+    </form>
 {% else %}
     <p><b>Produto esgotado no momento.</b></p>
 {% endif %}

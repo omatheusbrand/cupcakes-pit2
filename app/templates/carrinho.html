@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block titulo %}Carrinho — Doce Mimo Cupcakes{% endblock %}
+
+{% block conteudo %}
+<h1>Meu carrinho</h1>
+
+{% if not itens %}
+    <p>Seu carrinho está vazio.</p>
+    <a href="{{ url_for('vitrine.index') }}" class="botao-primario" style="display:inline-block;text-decoration:none;">Ver cupcakes</a>
+{% else %}
+    {% for item in itens %}
+    <div class="item-carrinho">
+        <div>
+            <b>{{ item.cupcake.nome }}</b><br>
+            <span>R$ {{ "%.2f"|format(item.cupcake.preco) }} cada</span>
+        </div>
+        <form method="post" action="{{ url_for('carrinho.atualizar', cupcake_id=item.cupcake.id) }}" class="qtd-form">
+            <button type="submit" name="quantidade" value="{{ item.quantidade - 1 }}">−</button>
+            <span>{{ item.quantidade }}</span>
+            <button type="submit" name="quantidade" value="{{ item.quantidade + 1 }}">+</button>
+        </form>
+        <b>R$ {{ "%.2f"|format(item.subtotal) }}</b>
+        <form method="post" action="{{ url_for('carrinho.remover', cupcake_id=item.cupcake.id) }}">
+            <button type="submit" class="botao-remover" title="Remover item">✕</button>
+        </form>
+    </div>
+    {% endfor %}
+
+    <div class="linha bold">
+        <span>Subtotal</span>
+        <span>R$ {{ "%.2f"|format(subtotal) }}</span>
+    </div>
+
+    <a href="{{ url_for('pedido.escolher_entrega') }}" class="botao-primario" style="display:inline-block;text-decoration:none;margin-top:12px;">Finalizar pedido</a>
+    <a href="{{ url_for('vitrine.index') }}" style="display:block;margin-top:8px;">Continuar comprando</a>
+{% endif %}
+{% endblock %}

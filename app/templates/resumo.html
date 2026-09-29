@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}Resumo do pedido — Doce Mimo Cupcakes{% endblock %}
+
+{% block conteudo %}
+<h1>Resumo do pedido</h1>
+
+{% for item in itens %}
+<div class="linha">
+    <span>{{ item.cupcake.nome }} x{{ item.quantidade }}</span>
+    <span>R$ {{ "%.2f"|format(item.subtotal) }}</span>
+</div>
+{% endfor %}
+
+<div class="linha"><span>Subtotal</span><span>R$ {{ "%.2f"|format(subtotal) }}</span></div>
+<div class="linha"><span>Taxa de entrega</span><span>R$ {{ "%.2f"|format(taxa) }}</span></div>
+<div class="linha bold"><span>Total</span><span>R$ {{ "%.2f"|format(total) }}</span></div>
+
+<p>
+    {% if tipo == "entrega" %}
+        Recebimento: Entrega — {{ endereco.rua }}, {{ endereco.numero }}, {{ endereco.bairro }}
+    {% else %}
+        Recebimento: Retirada na loja
+    {% endif %}
+</p>
+
+<form method="post" action="{{ url_for('pedido.finalizar') }}">
+    <button type="submit" class="botao-primario">Ir para o pagamento</button>
+</form>
+<a href="{{ url_for('pedido.escolher_entrega') }}" style="display:block;margin-top:8px;">Voltar</a>
+{% endblock %}

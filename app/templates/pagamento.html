@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Pagamento — Doce Mimo Cupcakes{% endblock %}
+
+{% block conteudo %}
+<h1>Pagamento</h1>
+<p>Total do pedido #{{ pedido.id }}: <b>R$ {{ "%.2f"|format(pedido.total) }}</b></p>
+
+<div class="abas-pagamento">
+    <form method="post" action="{{ url_for('pagamento.processar', pedido_id=pedido.id) }}" class="formulario">
+        <input type="hidden" name="metodo" value="pix">
+        <h2>Pix</h2>
+        <div class="imagem-espaco" style="height:70px;">código Pix (simulado)</div>
+        <button type="submit" class="botao-primario">Confirmar pagamento via Pix</button>
+    </form>
+
+    <form method="post" action="{{ url_for('pagamento.processar', pedido_id=pedido.id) }}" class="formulario" style="margin-top:24px;">
+        <input type="hidden" name="metodo" value="cartao">
+        <h2>Cartão</h2>
+        <label>Número do cartão (16 dígitos)
+            <input type="text" name="numero_cartao" maxlength="19" placeholder="0000000000000000" required>
+        </label>
+        <label>Validade
+            <input type="text" name="validade" placeholder="MM/AA" required>
+        </label>
+        <label>CVV
+            <input type="text" name="cvv" maxlength="3" placeholder="123" required>
+        </label>
+        <button type="submit" class="botao-primario">Confirmar pagamento no cartão</button>
+    </form>
+</div>
+{% endblock %}

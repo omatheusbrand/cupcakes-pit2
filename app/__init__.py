@@ -19,8 +19,11 @@ def criar_app():
     # às vezes entregam a URL como "postgres://". Corrigimos aqui.
     if database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
+    # Usamos o driver psycopg (versão 3), que já vem pré-compilado para
+    # qualquer versão do Python/Windows, evitando erros de compilação.
     if database_url.startswith("postgresql://"):
         database_url = database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+
     app.config["SQLALCHEMY_DATABASE_URI"] = database_url
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_pre_ping": True}
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "chave-temporaria-de-desenvolvimento")
@@ -30,8 +33,14 @@ def criar_app():
     # Registra os Controladores (Blueprints), cada um cuidando de uma área do sistema
     from app.controllers.vitrine_controller import vitrine_bp
     from app.controllers.auth_controller import auth_bp
+    from app.controllers.carrinho_controller import carrinho_bp
+    from app.controllers.pedido_controller import pedido_bp
+    from app.controllers.pagamento_controller import pagamento_bp
 
     app.register_blueprint(vitrine_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(carrinho_bp)
+    app.register_blueprint(pedido_bp)
+    app.register_blueprint(pagamento_bp)
 
     return app

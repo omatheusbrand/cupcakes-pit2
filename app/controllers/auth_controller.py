@@ -49,15 +49,18 @@ def cadastro():
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
+    proximo = request.values.get("proximo")
+
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
         senha = request.form.get("senha", "")
+        proximo = request.form.get("proximo")
 
         usuario = Usuario.query.filter_by(email=email).first()
 
         if usuario is None or not check_password_hash(usuario.senha_hash, senha):
             flash("E-mail ou senha inválidos.", "erro")
-            return render_template("login.html", email=email)
+            return render_template("login.html", email=email, proximo=proximo)
 
         session["usuario_id"] = usuario.id
         session["usuario_nome"] = usuario.nome
@@ -65,9 +68,11 @@ def login():
 
         if usuario.is_admin:
             return redirect(url_for("vitrine.admin_cupcakes"))
+        if proximo:
+            return redirect(proximo)
         return redirect(url_for("vitrine.index"))
 
-    return render_template("login.html")
+    return render_template("login.html", proximo=proximo)
 
 
 @auth_bp.route("/logout")

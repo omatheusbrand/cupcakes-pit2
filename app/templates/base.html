@@ -10,6 +10,7 @@
     <header class="cabecalho">
         <a href="{{ url_for('vitrine.index') }}" class="logo">🧁 Doce Mimo Cupcakes</a>
         <nav>
+            <a href="{{ url_for('carrinho.ver_carrinho') }}">🛒 Carrinho</a>
             {% if session.get('usuario_id') %}
                 {% if session.get('usuario_papel') == 'admin' %}
                     <a href="{{ url_for('vitrine.admin_cupcakes') }}">Painel admin</a>

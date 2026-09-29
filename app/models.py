@@ -75,3 +75,62 @@ class Configuracao(db.Model):
 
     id = db.Column(db.SmallInteger, primary_key=True, default=1)
     taxa_entrega = db.Column(db.Numeric(10, 2), nullable=False, default=8.00)
+
+
+class Pedido(db.Model):
+    __tablename__ = "pedido"
+
+    STATUS_VALIDOS = [
+        "aguardando_pagamento", "recebido", "em_preparo",
+        "saiu_para_entrega", "pronto_para_retirada", "entregue", "cancelado",
+    ]
+
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey("usuario.id"), nullable=False)
+    endereco_id = db.Column(db.Integer, db.ForeignKey("endereco.id"))
+    tipo_recebimento = db.Column(db.String(10), nullable=False)  # 'entrega' ou 'retirada'
+    subtotal = db.Column(db.Numeric(10, 2), nullable=False)
+    taxa_entrega = db.Column(db.Numeric(10, 2), nullable=False, default=0)
+    total = db.Column(db.Numeric(10, 2), nullable=False)
+    status = db.Column(db.String(25), nullable=False, default="aguardando_pagamento")
+    criado_em = db.Column(db.DateTime, default=datetime.utcnow)
+    atualizado_em = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    usuario = db.relationship("Usuario")
+    endereco = db.relationship("Endereco")
+    itens = db.relationship("ItemPedido", backref="pedido", lazy=True, cascade="all, delete-orphan")
+    pagamento = db.relationship("Pagamento", backref="pedido", uselist=False, cascade="all, delete-orphan")
+
+    @property
+    def pode_cancelar(self):
+        # RN09: só pode cancelar antes de "em_preparo"
+        return self.status in ("aguardando_pagamento", "recebido")
+
+
+class ItemPedido(db.Model):
+    __tablename__ = "item_pedido"
+
+    id = db.Column(db.Integer, primary_key=True)
+    pedido_id = db.Column(db.Integer, db.ForeignKey("pedido.id"), nullable=False)
+    cupcake_id = db.Column(db.Integer, db.ForeignKey("cupcake.id"), nullable=False)
+    quantidade = db.Column(db.Integer, nullable=False)
+    preco_unitario = db.Column(db.Numeric(10, 2), nullable=False)
+
+    cupcake = db.relationship("Cupcake")
+
+    @property
+    def subtotal(self):
+        return self.quantidade * self.preco_unitario
+
+
+class Pagamento(db.Model):
+    __tablename__ = "pagamento"
+
+    id = db.Column(db.Integer, primary_key=True)
+    pedido_id = db.Column(db.Integer, db.ForeignKey("pedido.id"), nullable=False, unique=True)
+    metodo = db.Column(db.String(10), nullable=False)  # 'pix' ou 'cartao'
+    status = db.Column(db.String(10), nullable=False, default="pendente")
+    valor = db.Column(db.Numeric(10, 2), nullable=False)
+    codigo_pix = db.Column(db.String(100))
+    cartao_final = db.Column(db.String(4))
+    criado_em = db.Column(db.DateTime, default=datetime.utcnow)

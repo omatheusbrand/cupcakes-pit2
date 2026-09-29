@@ -9,7 +9,7 @@ import pytest
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 
 from app import criar_app, db as _db
-from app.models import Categoria, Cupcake
+from app.models import Categoria, Cupcake, Configuracao
 
 
 @pytest.fixture
@@ -19,6 +19,7 @@ def app():
 
     with app.app_context():
         _db.create_all()
+        _db.session.add(Configuracao(id=1, taxa_entrega=8.00))
         categoria = Categoria(nome="Tradicionais")
         _db.session.add(categoria)
         _db.session.commit()

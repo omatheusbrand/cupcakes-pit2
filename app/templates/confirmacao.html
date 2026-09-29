@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}Pedido confirmado — Doce Mimo Cupcakes{% endblock %}
+
+{% block conteudo %}
+<div class="alerta alerta-sucesso">✔ Pedido confirmado!</div>
+
+<h1>Pedido nº {{ pedido.id }}</h1>
+<div class="linha"><span>Itens</span><span>{{ pedido.itens|length }} cupcake(s)</span></div>
+<div class="linha">
+    <span>Recebimento</span>
+    <span>{{ "Entrega" if pedido.tipo_recebimento == "entrega" else "Retirada na loja" }}</span>
+</div>
+<div class="linha bold"><span>Total</span><span>R$ {{ "%.2f"|format(pedido.total) }}</span></div>
+
+<a href="{{ url_for('vitrine.index') }}" class="botao-primario" style="display:inline-block;text-decoration:none;margin-top:16px;">Voltar à vitrine</a>
+{% endblock %}
