@@ -67,7 +67,7 @@ def login():
         session["usuario_papel"] = usuario.papel
 
         if usuario.is_admin:
-            return redirect(url_for("vitrine.admin_cupcakes"))
+            return redirect(url_for("admin.listar_cupcakes"))
         if proximo:
             return redirect(proximo)
         return redirect(url_for("vitrine.index"))

@@ -2,12 +2,17 @@
 {% block titulo %}Admin: cupcakes — Doce Mimo Cupcakes{% endblock %}
 
 {% block conteudo %}
-<h1>Cupcakes cadastrados</h1>
-<p><i>O formulário de cadastro e edição vem no próximo bloco.</i></p>
+<div class="chips">
+    <a href="{{ url_for('admin.listar_cupcakes') }}" class="ativo">Cupcakes</a>
+    <a href="{{ url_for('admin.listar_pedidos') }}">Pedidos</a>
+</div>
 
-<table class="tabela">
+<h1>Cupcakes cadastrados</h1>
+<a href="{{ url_for('admin.novo_cupcake') }}" class="botao-primario" style="display:inline-block;text-decoration:none;margin-bottom:14px;">+ Novo cupcake</a>
+
+<div class="tabela-wrap"><table class="tabela">
     <thead>
-        <tr><th>Nome</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Status</th></tr>
+        <tr><th>Nome</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Status</th><th>Ações</th></tr>
     </thead>
     <tbody>
         {% for c in cupcakes %}
@@ -17,8 +22,15 @@
             <td>R$ {{ "%.2f"|format(c.preco) }}</td>
             <td>{{ c.estoque }}</td>
             <td>{{ "Ativo" if c.ativo else "Desativado" }}</td>
+            <td>
+                <a href="{{ url_for('admin.editar_cupcake', cupcake_id=c.id) }}">Editar</a>
+                &nbsp;|&nbsp;
+                <form method="post" action="{{ url_for('admin.alternar_status_cupcake', cupcake_id=c.id) }}" style="display:inline;">
+                    <button type="submit" class="botao-link">{{ "Desativar" if c.ativo else "Ativar" }}</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
-</table>
+</table></div>
 {% endblock %}

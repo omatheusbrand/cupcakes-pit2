@@ -69,6 +69,7 @@ a { color: inherit; text-decoration: none; }
 .tabela { width: 100%; border-collapse: collapse; margin-top: 12px; }
 .tabela th, .tabela td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; font-size: 14px; }
 .tabela th { background: #eee; }
+.tabela-wrap { overflow-x: auto; }
 
 .item-carrinho {
     display: flex; align-items: center; justify-content: space-between; gap: 14px;
@@ -79,6 +80,7 @@ a { color: inherit; text-decoration: none; }
     width: 26px; height: 26px; border: 1px solid #999; background: #fff; border-radius: 4px; cursor: pointer;
 }
 .botao-remover { border: none; background: none; color: #922; font-size: 16px; cursor: pointer; }
+.botao-link { border: none; background: none; color: #0b5cad; text-decoration: underline; cursor: pointer; font-size: 13px; padding: 0; }
 
 .radio-linha { display: flex; align-items: center; gap: 8px; font-size: 14px; margin: 6px 0; }
 #bloco-endereco { margin-left: 24px; padding: 6px 0; }

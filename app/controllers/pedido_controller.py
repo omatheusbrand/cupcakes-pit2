@@ -172,3 +172,49 @@ def confirmacao(pedido_id):
         return redirect(url_for("vitrine.index"))
 
     return render_template("confirmacao.html", pedido=pedido)
+
+
+@pedido_bp.route("/meus-pedidos")
+def meus_pedidos():
+    if not usuario_logado():
+        return redirect(url_for("auth.login"))
+
+    pedidos = (
+        Pedido.query.filter_by(usuario_id=usuario_logado())
+        .filter(Pedido.status != "aguardando_pagamento")  # só mostra pedidos já pagos
+        .order_by(Pedido.criado_em.desc())
+        .all()
+    )
+    return render_template("meus_pedidos.html", pedidos=pedidos)
+
+
+@pedido_bp.route("/pedido/<int:pedido_id>/acompanhar")
+def acompanhar(pedido_id):
+    if not usuario_logado():
+        return redirect(url_for("auth.login"))
+
+    pedido = Pedido.query.get_or_404(pedido_id)
+    if pedido.usuario_id != usuario_logado():
+        return redirect(url_for("pedido.meus_pedidos"))
+
+    etapas = ["recebido", "em_preparo", "saiu_para_entrega" if pedido.tipo_recebimento == "entrega" else "pronto_para_retirada", "entregue"]
+    return render_template("acompanhar.html", pedido=pedido, etapas=etapas)
+
+
+@pedido_bp.route("/pedido/<int:pedido_id>/cancelar", methods=["POST"])
+def cancelar(pedido_id):
+    if not usuario_logado():
+        return redirect(url_for("auth.login"))
+
+    pedido = Pedido.query.get_or_404(pedido_id)
+    if pedido.usuario_id != usuario_logado():
+        return redirect(url_for("pedido.meus_pedidos"))
+
+    if not pedido.pode_cancelar:  # RN09: só antes de "em_preparo"
+        flash("Este pedido não pode mais ser cancelado.", "erro")
+        return redirect(url_for("pedido.acompanhar", pedido_id=pedido.id))
+
+    pedido.status = "cancelado"
+    db.session.commit()
+    flash(f"Pedido #{pedido.id} cancelado.", "sucesso")
+    return redirect(url_for("pedido.meus_pedidos"))

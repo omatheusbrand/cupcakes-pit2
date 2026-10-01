@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block titulo %}{{ "Editar" if cupcake else "Novo" }} cupcake — Doce Mimo Cupcakes{% endblock %}
+
+{% block conteudo %}
+<div class="chips">
+    <a href="{{ url_for('admin.listar_cupcakes') }}" class="ativo">Cupcakes</a>
+    <a href="{{ url_for('admin.listar_pedidos') }}">Pedidos</a>
+</div>
+
+<h1>{{ "Editar cupcake" if cupcake else "Novo cupcake" }}</h1>
+
+{% set d = dados or cupcake %}
+<form method="post" class="formulario">
+    <label>Nome
+        <input type="text" name="nome" value="{{ d.nome if d else '' }}" required>
+    </label>
+    <label>Descrição
+        <input type="text" name="descricao" value="{{ d.descricao if d else '' }}" required>
+    </label>
+    <label>Ingredientes
+        <input type="text" name="ingredientes" value="{{ d.ingredientes if d else '' }}" required>
+    </label>
+    <label>Alergênicos
+        <input type="text" name="alergenicos" value="{{ d.alergenicos if d else '' }}">
+    </label>
+    <label>Preço (R$)
+        <input type="number" step="0.01" min="0.01" name="preco" value="{{ d.preco if d else '' }}" required>
+    </label>
+    <label>Estoque
+        <input type="number" min="0" name="estoque" value="{{ d.estoque if d else 0 }}" required>
+    </label>
+    <label>Categoria
+        <select name="categoria_id" required>
+            <option value="">Selecione...</option>
+            {% for cat in categorias %}
+            <option value="{{ cat.id }}" {% if d and d.categoria_id|string == cat.id|string %}selected{% endif %}>{{ cat.nome }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Foto (endereço da imagem)
+        <input type="text" name="foto_url" value="{{ d.foto_url if d else '' }}">
+    </label>
+    <button type="submit" class="botao-primario">Salvar</button>
+</form>
+{% endblock %}

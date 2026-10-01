@@ -36,11 +36,13 @@ def criar_app():
     from app.controllers.carrinho_controller import carrinho_bp
     from app.controllers.pedido_controller import pedido_bp
     from app.controllers.pagamento_controller import pagamento_bp
+    from app.controllers.admin_controller import admin_bp
 
     app.register_blueprint(vitrine_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(carrinho_bp)
     app.register_blueprint(pedido_bp)
     app.register_blueprint(pagamento_bp)
+    app.register_blueprint(admin_bp)
 
     return app

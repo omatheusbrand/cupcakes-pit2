@@ -13,7 +13,9 @@
             <a href="{{ url_for('carrinho.ver_carrinho') }}">🛒 Carrinho</a>
             {% if session.get('usuario_id') %}
                 {% if session.get('usuario_papel') == 'admin' %}
-                    <a href="{{ url_for('vitrine.admin_cupcakes') }}">Painel admin</a>
+                    <a href="{{ url_for('admin.listar_cupcakes') }}">Painel admin</a>
+                {% else %}
+                    <a href="{{ url_for('pedido.meus_pedidos') }}">Meus pedidos</a>
                 {% endif %}
                 <span>Olá, {{ session.get('usuario_nome') }}</span>
                 <a href="{{ url_for('auth.logout') }}">Sair</a>

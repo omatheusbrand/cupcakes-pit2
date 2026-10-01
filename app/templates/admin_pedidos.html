@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block titulo %}Admin: pedidos — Doce Mimo Cupcakes{% endblock %}
+
+{% block conteudo %}
+<div class="chips">
+    <a href="{{ url_for('admin.listar_cupcakes') }}">Cupcakes</a>
+    <a href="{{ url_for('admin.listar_pedidos') }}" class="ativo">Pedidos</a>
+</div>
+
+<h1>Pedidos</h1>
+
+<div class="chips">
+    <a href="{{ url_for('admin.listar_pedidos') }}" class="{{ 'ativo' if not filtro else '' }}">Todos</a>
+    {% for s in sequencia %}
+        <a href="{{ url_for('admin.listar_pedidos', status=s) }}" class="{{ 'ativo' if filtro == s else '' }}">{{ legivel[s] }}</a>
+    {% endfor %}
+</div>
+
+<div class="tabela-wrap"><table class="tabela">
+    <thead>
+        <tr><th>Pedido</th><th>Cliente</th><th>Itens</th><th>Total</th><th>Status</th><th>Ação</th></tr>
+    </thead>
+    <tbody>
+        {% for p in pedidos %}
+        <tr>
+            <td>#{{ p.id }}</td>
+            <td>{{ p.usuario.nome }}</td>
+            <td>{{ p.itens|length }}</td>
+            <td>R$ {{ "%.2f"|format(p.total) }}</td>
+            <td>{{ legivel[p.status] }}</td>
+            <td>
+                {% if p.status not in ("entregue", "cancelado") %}
+                <form method="post" action="{{ url_for('admin.atualizar_status_pedido', pedido_id=p.id) }}" style="display:flex;gap:6px;">
+                    <select name="status">
+                        {% for s in sequencia %}
+                            <option value="{{ s }}" {% if s == p.status %}selected{% endif %}>{{ legivel[s] }}</option>
+                        {% endfor %}
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+                    <button type="submit" class="botao-primario">Atualizar</button>
+                </form>
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6">Nenhum pedido encontrado.</td></tr>
+        {% endfor %}
+    </tbody>
+</table></div>
+{% endblock %}

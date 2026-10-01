@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block titulo %}Meus pedidos — Doce Mimo Cupcakes{% endblock %}
+
+{% block conteudo %}
+<h1>Meus pedidos</h1>
+
+{% if not pedidos %}
+    <p>Você ainda não fez pedidos.</p>
+{% else %}
+    {% for p in pedidos %}
+    <a href="{{ url_for('pedido.acompanhar', pedido_id=p.id) }}" class="item-carrinho" style="text-decoration:none;color:inherit;">
+        <div>
+            <b>#{{ p.id }} · {{ p.criado_em.strftime('%d/%m/%Y') }}</b><br>
+            <span>{{ "Entregue" if p.status == "entregue" else "Cancelado" if p.status == "cancelado" else "Em andamento" }}</span>
+        </div>
+        <b>R$ {{ "%.2f"|format(p.total) }}</b>
+    </a>
+    {% endfor %}
+{% endif %}
+{% endblock %}

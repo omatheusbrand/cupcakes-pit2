@@ -36,13 +36,3 @@ def index():
 def detalhes(cupcake_id):
     cupcake = Cupcake.query.get_or_404(cupcake_id)
     return render_template("detalhes.html", cupcake=cupcake)
-
-
-@vitrine_bp.route("/admin/cupcakes")
-def admin_cupcakes():
-    # Proteção básica: só administrador logado acessa (Curso alternativo Alfa do CU-03/CU-04)
-    if session.get("usuario_papel") != "admin":
-        return redirect(url_for("vitrine.index"))
-
-    cupcakes = Cupcake.query.order_by(Cupcake.nome).all()
-    return render_template("admin_cupcakes.html", cupcakes=cupcakes)
