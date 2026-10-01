@@ -4,7 +4,11 @@
 {% block conteudo %}
 <a href="{{ url_for('vitrine.index') }}">&larr; Voltar à vitrine</a>
 
-<div class="imagem-espaco grande">imagem</div>
+{% if cupcake.foto_url %}
+    <img src="{{ cupcake.foto_url }}" alt="{{ cupcake.nome }}" class="foto-produto grande">
+{% else %}
+    <div class="imagem-espaco grande">imagem</div>
+{% endif %}
 <h1>{{ cupcake.nome }}</h1>
 <p>{{ cupcake.descricao }}</p>
 

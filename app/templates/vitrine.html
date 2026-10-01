@@ -17,7 +17,11 @@
 <div class="grade">
     {% for cupcake in cupcakes %}
         <a href="{{ url_for('vitrine.detalhes', cupcake_id=cupcake.id) }}" class="cartao {{ 'esgotado' if not cupcake.disponivel else '' }}">
-            <div class="imagem-espaco">imagem</div>
+            {% if cupcake.foto_url %}
+                <img src="{{ cupcake.foto_url }}" alt="{{ cupcake.nome }}" class="foto-produto">
+            {% else %}
+                <div class="imagem-espaco">imagem</div>
+            {% endif %}
             <b>{{ cupcake.nome }}</b>
             <span>R$ {{ "%.2f"|format(cupcake.preco) }}</span>
             {% if not cupcake.disponivel %}
