@@ -37,5 +37,21 @@
 
         {% block conteudo %}{% endblock %}
     </main>
+
+    <script>
+        // Mensagens de erro mais claras para campos obrigatórios não preenchidos
+        document.querySelectorAll("input[required], select[required]").forEach(function (campo) {
+            campo.addEventListener("invalid", function () {
+                if (campo.validity.valueMissing) {
+                    campo.setCustomValidity("Este campo é obrigatório. Por favor, preencha antes de continuar.");
+                } else {
+                    campo.setCustomValidity("");
+                }
+            });
+            campo.addEventListener("input", function () {
+                campo.setCustomValidity("");
+            });
+        });
+    </script>
 </body>
 </html>

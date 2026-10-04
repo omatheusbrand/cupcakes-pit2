@@ -2,15 +2,34 @@
 {% block titulo %}Pedido confirmado — Doce Mimo Cupcakes{% endblock %}
 
 {% block conteudo %}
-<div class="alerta alerta-sucesso">✔ Pedido confirmado!</div>
+<div class="alerta alerta-sucesso">✔ Pedido confirmado! Obrigado pela compra.</div>
 
 <h1>Pedido nº {{ pedido.id }}</h1>
-<div class="linha"><span>Itens</span><span>{{ pedido.itens|length }} cupcake(s)</span></div>
+<p>Recebemos seu pagamento e já avisamos a loja para começar a preparar o seu pedido. Você pode acompanhar cada etapa a qualquer momento em "Meus pedidos".</p>
+
+<h2>Itens do pedido</h2>
+{% for item in pedido.itens %}
 <div class="linha">
-    <span>Recebimento</span>
+    <span>{{ item.cupcake.nome }} x{{ item.quantidade }}</span>
+    <span>R$ {{ "%.2f"|format(item.subtotal) }}</span>
+</div>
+{% endfor %}
+
+<div class="linha"><span>Subtotal</span><span>R$ {{ "%.2f"|format(pedido.subtotal) }}</span></div>
+<div class="linha"><span>Taxa de entrega</span><span>R$ {{ "%.2f"|format(pedido.taxa_entrega) }}</span></div>
+<div class="linha">
+    <span>Forma de recebimento</span>
     <span>{{ "Entrega" if pedido.tipo_recebimento == "entrega" else "Retirada na loja" }}</span>
 </div>
+{% if pedido.endereco %}
+<div class="linha">
+    <span>Endereço</span>
+    <span>{{ pedido.endereco.rua }}, {{ pedido.endereco.numero }} — {{ pedido.endereco.bairro }}</span>
+</div>
+{% endif %}
+<div class="linha"><span>Data do pedido</span><span>{{ pedido.criado_em.strftime('%d/%m/%Y às %H:%M') }}</span></div>
 <div class="linha bold"><span>Total</span><span>R$ {{ "%.2f"|format(pedido.total) }}</span></div>
 
-<a href="{{ url_for('vitrine.index') }}" class="botao-primario" style="display:inline-block;text-decoration:none;margin-top:16px;">Voltar à vitrine</a>
+<a href="{{ url_for('pedido.acompanhar', pedido_id=pedido.id) }}" class="botao-primario" style="display:inline-block;text-decoration:none;margin-top:16px;">Acompanhar pedido</a>
+<a href="{{ url_for('vitrine.index') }}" style="display:block;margin-top:8px;">Voltar à vitrine</a>
 {% endblock %}

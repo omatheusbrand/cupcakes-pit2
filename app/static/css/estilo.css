@@ -81,6 +81,7 @@ a { color: inherit; text-decoration: none; }
     background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 10px 14px; margin-bottom: 8px;
 }
 .qtd-form { display: flex; align-items: center; gap: 8px; }
+.qtd-form.atualizando { opacity: .5; cursor: wait; }
 .qtd-form button {
     width: 26px; height: 26px; border: 1px solid #999; background: #fff; border-radius: 4px; cursor: pointer;
 }
@@ -90,3 +91,13 @@ a { color: inherit; text-decoration: none; }
 .radio-linha { display: flex; align-items: center; gap: 8px; font-size: 14px; margin: 6px 0; }
 #bloco-endereco { margin-left: 24px; padding: 6px 0; }
 .abas-pagamento { max-width: 380px; }
+
+/* Telas pequenas: evita que textos e botões fiquem colados na borda */
+@media (max-width: 480px) {
+    .conteudo { padding: 0 20px; margin: 18px auto; }
+    .cabecalho { padding: 12px 20px; flex-wrap: wrap; gap: 8px; }
+    .cabecalho nav a, .cabecalho nav span { margin-left: 0; margin-right: 12px; }
+    .grade { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+    .item-carrinho { flex-wrap: wrap; gap: 10px; padding: 10px; }
+    .tabela th, .tabela td { padding: 6px; font-size: 13px; }
+}

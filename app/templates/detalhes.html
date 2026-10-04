@@ -5,7 +5,7 @@
 <a href="{{ url_for('vitrine.index') }}">&larr; Voltar à vitrine</a>
 
 {% if cupcake.foto_url %}
-    <img src="{{ cupcake.foto_url }}" alt="{{ cupcake.nome }}" class="foto-produto grande">
+    <img src="{{ cupcake.foto_url }}" alt="{{ cupcake.nome }}" class="foto-produto grande" loading="lazy" decoding="async">
 {% else %}
     <div class="imagem-espaco grande">imagem</div>
 {% endif %}

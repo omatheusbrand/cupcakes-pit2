@@ -14,7 +14,7 @@
             <b>{{ item.cupcake.nome }}</b><br>
             <span>R$ {{ "%.2f"|format(item.cupcake.preco) }} cada</span>
         </div>
-        <form method="post" action="{{ url_for('carrinho.atualizar', cupcake_id=item.cupcake.id) }}" class="qtd-form">
+        <form method="post" action="{{ url_for('carrinho.atualizar', cupcake_id=item.cupcake.id) }}" class="qtd-form" onsubmit="this.querySelectorAll('button').forEach(b => b.disabled = true); this.classList.add('atualizando');">
             <button type="submit" name="quantidade" value="{{ item.quantidade - 1 }}">−</button>
             <span>{{ item.quantidade }}</span>
             <button type="submit" name="quantidade" value="{{ item.quantidade + 1 }}">+</button>

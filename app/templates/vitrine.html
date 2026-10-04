@@ -18,7 +18,7 @@
     {% for cupcake in cupcakes %}
         <a href="{{ url_for('vitrine.detalhes', cupcake_id=cupcake.id) }}" class="cartao {{ 'esgotado' if not cupcake.disponivel else '' }}">
             {% if cupcake.foto_url %}
-                <img src="{{ cupcake.foto_url }}" alt="{{ cupcake.nome }}" class="foto-produto">
+                <img src="{{ cupcake.foto_url }}" alt="{{ cupcake.nome }}" class="foto-produto" loading="lazy" decoding="async">
             {% else %}
                 <div class="imagem-espaco">imagem</div>
             {% endif %}
