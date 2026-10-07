@@ -9,7 +9,7 @@ Aplicativo web de loja de cupcakes: vitrine, carrinho, pedido, pagamento (simula
   > No plano gratuito o serviço "dorme" após ~15 min sem acesso. O primeiro clique
   > depois disso pode levar de 30s a 1 min para responder — é normal, não é falha.
 - Protótipo clicável (wireframes): https://omatheusbrand.github.io/cupcakes-pit2/prototipo.html
-- Documentação consolidada (PDF): [main/PIT-II-documentacao-consolidada.pdf](main/PIT-II-documentacao-consolidada.pdf)
+- Documentação consolidada (PDF): [docs/PIT-II-documentacao-consolidada.pdf](docs/PIT-II-documentacao-consolidada.pdf)
 
 ## Estrutura do repositório
 
