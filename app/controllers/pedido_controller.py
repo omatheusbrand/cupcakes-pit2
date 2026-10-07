@@ -4,7 +4,9 @@ Implementa o CU-01 (finalizar pedido): US-09, US-10, US-11.
 Segue o curso básico de ação e os cursos alternativos descritos em
 docs/05-casos-de-uso-expandidos.md.
 """
+import re
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from sqlalchemy.exc import SQLAlchemyError
 from app import db
 from app.models import Endereco, Pedido, ItemPedido, Configuracao
 from app.controllers.carrinho_controller import obter_itens_do_carrinho, calcular_subtotal
@@ -61,6 +63,16 @@ def novo_endereco():
     if not usuario_logado():
         return redirect(url_for("auth.login"))
 
+    # CORREÇÃO: o campo CEP no banco só aceita 8 caracteres (CHAR(8)).
+    # Removemos tudo que não for dígito (traço, espaço etc.) antes de salvar,
+    # e validamos o tamanho, para nunca mais estourar esse limite.
+    cep_digitos = re.sub(r"\D", "", request.form.get("cep", ""))[:8]
+
+    if len(cep_digitos) != 8:
+        flash("CEP inválido. Digite os 8 números do CEP (com ou sem traço).", "erro")
+        enderecos = Endereco.query.filter_by(usuario_id=usuario_logado()).all()
+        return render_template("entrega.html", enderecos=enderecos, taxa=obter_taxa_entrega())
+
     endereco = Endereco(
         usuario_id=usuario_logado(),
         rua=request.form.get("rua", "").strip(),
@@ -69,10 +81,19 @@ def novo_endereco():
         bairro=request.form.get("bairro", "").strip(),
         cidade=request.form.get("cidade", "").strip(),
         uf=request.form.get("uf", "").strip().upper()[:2],
-        cep=request.form.get("cep", "").strip(),
+        cep=cep_digitos,
     )
-    db.session.add(endereco)
-    db.session.commit()
+
+    try:
+        db.session.add(endereco)
+        db.session.commit()
+    except SQLAlchemyError:
+        # Rede de segurança: se o banco recusar por qualquer outro motivo,
+        # mostramos um erro amigável em vez de quebrar a página.
+        db.session.rollback()
+        flash("Não foi possível salvar o endereço. Confira os dados e tente novamente.", "erro")
+        enderecos = Endereco.query.filter_by(usuario_id=usuario_logado()).all()
+        return render_template("entrega.html", enderecos=enderecos, taxa=obter_taxa_entrega())
 
     session["pedido_tipo_recebimento"] = "entrega"
     session["pedido_endereco_id"] = endereco.id
@@ -181,7 +202,7 @@ def meus_pedidos():
 
     pedidos = (
         Pedido.query.filter_by(usuario_id=usuario_logado())
-        .filter(Pedido.status != "aguardando_pagamento")  # só mostra pedidos já pagos
+        .filter(Pedido.status != "aguardando_pagamento")
         .order_by(Pedido.criado_em.desc())
         .all()
     )
